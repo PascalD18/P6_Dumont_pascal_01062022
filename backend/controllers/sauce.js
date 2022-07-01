@@ -40,7 +40,7 @@ exports.modifySauce = (req, res, next) => {
 }
 
 exports.likedNoliked = (req, res, next) => {
-  if (req.body.like === 1) {
+   if (req.body.like === 1) {
     Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
       .then(() => res.status(200).json({ message: "Ajoute un utilisateur qui aime !" }))
       .catch(error => res.status(400).json({ error }))
