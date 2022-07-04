@@ -1,6 +1,6 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
-const { db } = require('../models/Sauce');
+//const { db } = require('../models/Sauce');
 
 // Ajoute un objet Sauce
 exports.createSauce = (req, res, next) => {
