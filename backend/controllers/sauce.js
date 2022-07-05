@@ -40,7 +40,7 @@ exports.modifySauce = (req, res, next) => {
 }
 
 exports.likedNoliked = (req, res, next) => {
-   if (req.body.like === 1) {
+  if (req.body.like === 1) {
     Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
       .then(() => res.status(200).json({ message: "Ajoute un utilisateur qui aime !" }))
       .catch(error => res.status(400).json({ error }))
@@ -50,7 +50,7 @@ exports.likedNoliked = (req, res, next) => {
       .catch(error => res.status(400).json({ error }))
   } else {
     Sauce.findOne({ _id: req.params.id })
-     //console.log(1)
+      //console.log(1)
       .then(sauce => {
         if (sauce.usersLiked.includes(req.body.userId)) {
           Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
@@ -95,7 +95,8 @@ exports.getOneSauce = (req, res, next) => {
 
 // Lecture de tous les objets Sauce
 exports.getAllSauces = (req, res, next) => {
-  Sauce.find()
-    .then((Sauce) => res.status(200).json(Sauce))
+// Sauce.find()
+  Sauce.find((error, docs) => { console.log(docs) })
+  .then((Sauce) => res.status(200).json(Sauce))
     .catch(error => res.status(400).json({ error }));
 }
