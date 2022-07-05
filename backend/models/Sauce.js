@@ -22,4 +22,4 @@ const Sauce = mongoose.model(
 //});
 
 //module.exports = mongoose.model('Sauce', SauceSchema);
-module.exports = {Sauce};
+module.exports = { Sauce };

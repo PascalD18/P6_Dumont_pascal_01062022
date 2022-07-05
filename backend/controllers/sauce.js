@@ -1,4 +1,4 @@
-const Sauce = require('../models/Sauce');
+const { Sauce } = require('../models/Sauce');
 const fs = require('fs');
 //const { db } = require('../models/Sauce');
 
