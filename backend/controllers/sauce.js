@@ -96,6 +96,6 @@ exports.getOneSauce = (req, res, next) => {
 // Lecture de tous les objets Sauce
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
-    .then(Sauce => res.status(200).json(Sauce))
+    .then((Sauce) => res.status(200).json(Sauce))
     .catch(error => res.status(400).json({ error }));
 }
