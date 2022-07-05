@@ -40,7 +40,6 @@ exports.modifySauce = (req, res, next) => {
 }
 
 exports.likedNoliked = (req, res, next) => {
-  console.log(1)
    if (req.body.like === 1) {
     Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
       .then(() => res.status(200).json({ message: "Ajoute un utilisateur qui aime !" }))
@@ -51,7 +50,9 @@ exports.likedNoliked = (req, res, next) => {
       .catch(error => res.status(400).json({ error }))
   } else {
     Sauce.findOne({ _id: req.params.id })
+     //console.log(1)
       .then(sauce => {
+        console.log(2)
         if (sauce.usersLiked.includes(req.body.userId)) {
           Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
             .then(() => { res.status(200).json({ message: "Enléve un utilisateur qui aime !" }) })
@@ -63,8 +64,8 @@ exports.likedNoliked = (req, res, next) => {
         }
       })
       .catch(error => res.status(400).json({ error }))
+      console.log(3)
   }
-  console.log(2)
 }
 
 // Suppression objet Sauce
