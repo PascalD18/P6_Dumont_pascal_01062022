@@ -40,6 +40,7 @@ exports.modifySauce = (req, res, next) => {
 }
 
 exports.likedNoliked = (req, res, next) => {
+  console.log(1)
    if (req.body.like === 1) {
     Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
       .then(() => res.status(200).json({ message: "Ajoute un utilisateur qui aime !" }))
@@ -63,6 +64,7 @@ exports.likedNoliked = (req, res, next) => {
       })
       .catch(error => res.status(400).json({ error }))
   }
+  console.log(2)
 }
 
 // Suppression objet Sauce
