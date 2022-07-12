@@ -8,9 +8,6 @@ app.disable('x-powered-by');
 const path = require ('path');
 require ('dotenv').config(__dirname + '/.env' );
 
-
-console.log(`process.env.TOKEN_SECRET:${process.env.TOKEN_SECRET}`)
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
