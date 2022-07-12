@@ -4,7 +4,12 @@ const app = express();
 app.use(express.json());
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
+app.disable('x-powered-by');
 const path = require ('path');
+require ('dotenv').config(__dirname + '/.env' );
+
+
+console.log(`process.env.TOKEN_SECRET:${process.env.TOKEN_SECRET}`)
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
