@@ -1,4 +1,4 @@
-const { Sauce } = require('../models/Sauce');
+const Sauce = require('../models/Sauce');
 const fs = require('fs');
 //const { db } = require('../models/Sauce');
 
@@ -89,14 +89,26 @@ exports.deleteSauce = (req, res, next) => {
 // Lecture d'un objet Sauce
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .then((Sauce) => res.status(200).json(Sauce))
+    .then((sauce) => res.status(200).json(sauce))
     .catch(error => res.status(404).json({ error }));
 }
 
 // Lecture de tous les objets Sauce
-exports.getAllSauces = (req, res, next) => {
-// Sauce.find()
-  Sauce.find((error, docs) => { console.log(docs) })
-  .then((Sauce) => res.status(200).json(Sauce))
-    .catch(error => res.status(400).json({ error }));
-}
+  exports.getAllSauces = (req, res, next) => {
+    Sauce.find()
+      .then(sauce => res.status(200).json(sauce))
+      .catch(error => res.status(400).json({ error: error }))
+  }
+
+  //  .then(Sauce => {
+  //   res.status(200).json(Sauce);
+  //  Sauce.find((err,docs) => {
+  //    console.log({docs});
+
+  //});
+
+  //  })
+  //  .catch(error => {
+  //    res.status(400).json({ error })
+  //  });
+
