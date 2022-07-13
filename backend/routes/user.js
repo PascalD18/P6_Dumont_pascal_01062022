@@ -5,6 +5,6 @@ const passwordValidation = require('../midleware/password-validator')
 const max= require('../midleware/limiter')
 
 router.post('/signup', passwordValidation,userCtrl.signup);
-router.post('/login', max.limiter,userCtrl.login);
+router.post('/login', passwordValidation,userCtrl.login);
 
 module.exports = router;
