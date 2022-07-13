@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-app.disable('x-powered-by');
+//app.disable('x-powered-by');
 const path = require ('path');
 require ('dotenv').config(__dirname + '/.env' );
 const helmet = require('helmet');

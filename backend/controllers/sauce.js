@@ -35,9 +35,9 @@ exports.modifySauce = (req, res, next) => {
            const filename = sauce.imageUrl.split('/images/')[1];
            fs.unlink(`images/${filename}`, (err) => {
              console.log("ancienne photo effacée");
-             if (err){
-              res.status(401).json({ err });
-             }
+          //   if (err){
+         //     res.status(401).json({ err });
+          //   }
            })    
 
         Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
