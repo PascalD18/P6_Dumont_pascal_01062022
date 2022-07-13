@@ -7,6 +7,8 @@ const userRoutes = require('./routes/user');
 app.disable('x-powered-by');
 const path = require ('path');
 require ('dotenv').config(__dirname + '/.env' );
+const helmet = require('helmet');
+app.use(helmet());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
