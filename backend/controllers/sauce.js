@@ -20,33 +20,34 @@ exports.createSauce = (req, res, next) => {
 // Modification d'un objet Sauce
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ?
-   {
-    ...JSON.parse(req.body.sauce),
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body }
+    {
+      ...JSON.parse(req.body.sauce),
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body }
   delete sauceObject._userId;
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
         res.status(401).json({ message: 'Not authorized' });
+        next();
       } else {
 
-           //Supprime l'ancienne photo
-           const filename = sauce.imageUrl.split('/images/')[1];
-           fs.unlink(`images/${filename}`, (err) => {
-             console.log("ancienne photo effacée");
-          //   if (err){
-         //     res.status(401).json({ err });
-          //   }
-           })    
+        //Supprime l'ancienne photo
+        const filename = sauce.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          console.log("ancienne photo effacée");     
 
         Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
           .catch(error => res.status(401).json({ error }));
+
+      });
+
       }
     })
-    .catch((error) => {res.status(400).json({ error });
-  });
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 }
 
 exports.likedNoliked = (req, res, next) => {

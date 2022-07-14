@@ -1,15 +1,22 @@
-const helmet = require('helmet');
-//app.use(helmet());
 const express = require('express');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
-const app = express();
-app.use(express.json());
+
+
+//app.disable('x-powered-by');
+const path = require ('path');
+//require ('dotenv').config(__dirname + '/.env' );
+require ('dotenv').config();
+
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-app.disable('x-powered-by');
-const path = require ('path');
-require ('dotenv').config(__dirname + '/.env' );
 
+const app = express();
+app.use(express.json());
+app.use(helmet({
+  crossOrigineResourcePolicy: false,
+}));
+//app.use(helmet());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,7 +27,6 @@ app.use((req, res, next) => {
 
   // Connexion de la base de données 'mongoose' - Projet PASCAL DUMONT 18 - Cluster0
 mongoose.connect('mongodb+srv://Dpascal18-2:Mdpmondodbdpascal18-22022@cluster0.tqjqjtr.mongodb.net/?retryWrites=true&w=majority',
-//mongoose.connect('mongodb+srv://Dpascal18-2:Mdpmondodbdpascal18-22022@cluster0.tqjqjtr.mongodb.net/Utilisateurs',
 {
   useNewUrlParser: true,
   useUnifiedTopology: true
