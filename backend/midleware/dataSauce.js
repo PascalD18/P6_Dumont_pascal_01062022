@@ -15,6 +15,7 @@ module.exports.manufacturer = (req, res, next) => {
         res.status(401).json({ message: `Ne saisir que des lettres pour le champs 'manufacturer'. ` });
     }
 };
+
 module.exports.email = (req, res, next) => {
     const userObject = req.body;
 
