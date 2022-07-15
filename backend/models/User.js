@@ -8,14 +8,6 @@ const UserSchema = mongoose.Schema(
     },
 
 );
-//const User = mongoose.model(
-//    "Utilisateurs",
-//    UserSchema,
-//    "users"
-//);
-
-//UserSchema.plugin(uniqueValidator);
-//module.exports = User;
 
 UserSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('User', UserSchema);

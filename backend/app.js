@@ -2,10 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 
-
-//app.disable('x-powered-by');
 const path = require ('path');
-//require ('dotenv').config(__dirname + '/.env' );
 require ('dotenv').config();
 
 const saucesRoutes = require('./routes/sauce');
@@ -16,7 +13,6 @@ app.use(express.json());
 app.use(helmet({
   crossOrigineResourcePolicy: false,
 }));
-//app.use(helmet());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
