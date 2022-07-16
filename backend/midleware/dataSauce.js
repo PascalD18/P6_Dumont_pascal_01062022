@@ -14,20 +14,6 @@ module.exports.manufacturer = (req, res, next) => {
         next();
     } else {
         // Reponse de l'erreur si la saisie contient des chiffres
-        res.status(401).json({ message: `Ne saisir que des lettres pour le champs 'manufacturer'. ` });
-    }
-};
-
-// Validation de la saisie de l'email
-module.exports.email = (req, res, next) => {
-    const userObject = req.body;
-
-    // Definition du regex pour l'email
-    let valideDataEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-    if (valideDataEmail.test(userObject.email)) {
-        next();
-    } else {
-        // Reponse erreur , si email incorrect
-        res.status(401).json({ message: "Adresse email incorrecte !" });
+        res.status(400).json({ message: `Ne saisir que des lettres pour le champs 'manufacturer'. ` });
     }
 };
