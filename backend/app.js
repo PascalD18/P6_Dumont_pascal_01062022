@@ -1,10 +1,8 @@
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-
 const path = require ('path');
 require ('dotenv').config();
-
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
@@ -14,6 +12,7 @@ app.use(helmet({
   crossOrigineResourcePolicy: false,
 }));
 
+// Configuration de l'entete de la requete
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');

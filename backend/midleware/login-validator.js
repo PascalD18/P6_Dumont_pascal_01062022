@@ -24,16 +24,14 @@ const passwordSchema = new passwordValidator()
 // Définition du shemas que doit respecter le mot de passe
 passwordSchema
     .is().min(8)
-    .has().uppercase()
-    .has().lowercase()
-    .has().digits()
-    .not(/[/%]/);
+    .has().uppercase(2) // Doit contenir au moins 2 lettres majuscules
+    .has().lowercase(2) // Doit contenir au moins 2 lettres minuscules
+    .has().digits(2) // Doit contenir au moins 2 chiffres
+    .not(/[/%*&+\(){}=[]]/) // Evite d'utiliser certains digits spécifiques
+    .has(/[!-#._$£^]/) // Caracteres spéciaux à inclure dans le mot de passe
 
 // Module de validation du mot de passe
 module.exports.password = (req, res, next) => {
-
-    console.log(passwordSchema.validate('joke', { details: true }))
-
     if (passwordSchema.validate(req.body.password)) {
         next();
     } else {
@@ -42,7 +40,10 @@ module.exports.password = (req, res, next) => {
            - 8 caractéres minimum 
            - 2 Majuscules
            - 2 minuscules
-           - Ne doit pas contenir un des caracteres spéciaux suivants : / %`
+           - Ne doit pas contenir un des caracteres spéciaux suivants :
+             / \ % & + ( ) { } = [ ]
+           - Doit contenir au moins un des caracteres suivants :
+             ! - # . _ $ £ ^ `
         });
     }
 };

@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
+
+    // Cryptage du mot de passe, unidirectinnel ( méthode hash')
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
@@ -22,6 +24,8 @@ exports.login = (req, res, next) => {
             if (!user) {
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
             }
+
+            // Cryptage du 
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
