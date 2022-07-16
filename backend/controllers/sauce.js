@@ -58,43 +58,36 @@ exports.modifySauce = (req, res, next) => {
 exports.likedNoLiked = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
-      if (!sauce.usersLiked.includes(req.body.userId)) {
+      if (req.body.like == 1) {
 
-        // Si l'utilisateur n'a pas encore donné son avis => Incrémente l'avis correspondant et l'ajoute dans la table des aviseurs
-        if (req.body.like >= 0) {
+        // Si like = 1 => Incrémente likes et ajoute l'utilisateur dans tableau 'usersLiked'
+        Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
+          .then(() => res.status(200).json({ message: "Incremente likes et ajoute un utilisateur qui aime !" }))
+          .catch(error => res.status(400).json({ error }))
+      } else if (req.body.like == -1) {
 
-          // Incremente l'avis 'likes'
-          Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
-            .then(() => res.status(200).json({ message: "Ajoute un utilisateur qui aime !" }))
-            .catch(error => res.status(400).json({ error }))
-        } else {
-
-          // Incrémente l'avis 'dislikes'
-          Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId } })
-            .then(() => { res.status(200).json({ message: "Ajoute un utilisateur qui n' aime pas" }) })
-            .catch(error => res.status(400).json({ error }))
-        }
+        // Si Like = -1 => Incrémente dislikes et ajoute l'utilisateur dans tableau 'usersDisliked'
+        Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId } })
+          .then(() => { res.status(200).json({ message: "Ajoute un utilisateur qui n' aime pas !" }) })
+          .catch(error => res.status(400).json({ error }))
       } else {
+        if (sauce.usersLiked.includes(req.body.userId)) {
 
-        // Si l'utilisateur à déjà donné son avis => Décrémente l'avis correspondant et l'enléve de la table des aviseurs
-        if (req.body.like >= 0) {
-
-          //Décrémente l'avis 'likes'
+          // Si like = 0, et que l'utilisateur est dans le tableau 'usersLiked'
           Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
-            .then(() => { res.status(200).json({ message: "Enléve un utilisateur qui aime !" }) })
+            .then(() => { res.status(200).json({ message: "Décrément likes et enléve un utilisateur qui aime !" }) })
             .catch(error => res.status(400).json({ error }))
         } else {
 
-          // Décrémente l'avis 'dislikes'
+          // Sinon, si like = 0, cela signifie que l'utilisateur est dans le tableau 'usersDisliked'
           Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } })
-            .then(() => { res.status(200).json({ message: "Enléve un utilisateur qui n'aime pas !" }) })
+            .then(() => { res.status(200).json({ message: "Décrémente Dislikes et enléve un utilisateur qui n'aime pas !" }) })
             .catch(error => res.status(400).json({ error }))
         }
       };
     })
     .catch(error => res.status(400).json({ error }))
 }
-
 
 // Suppression objet Sauce
 exports.deleteSauce = (req, res, next) => {
