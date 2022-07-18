@@ -5,12 +5,18 @@ const fs = require('fs');
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
+
+
   delete sauceObject._userId;
+
+  // Création du formulaire de la sauce dans l'objet 'sauce'
   const sauce = new Sauce({
     ...sauceObject,
     userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
+
+  // Enregistrement du formulaire de la sauce
   sauce.save()
     .then(() => { res.status(201).json({ message: 'Sauce enregistrée !' }) })
     .catch(error => { res.status(400).json({ error }) })
@@ -18,43 +24,41 @@ exports.createSauce = (req, res, next) => {
 
 // Modification d'un objet Sauce
 exports.modifySauce = (req, res, next) => {
+
+  // Vérifie si une image a était selectionnée et enregistrée avec un nom unique
   const sauceObject = req.file ?
     {
       ...JSON.parse(req.body.sauce),
+
+      // Si oui, définit le nouvel Url avec le nom unique de l'image selectionnée
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+
+      // Sinon, renseigne le formulaire sauf 'imageUrl'
     } : { ...req.body }
-  delete sauceObject._userId;
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: 'Not authorized' });
-        next();
-      } else {
+  if (req.file !== undefined) {
 
-        //Vérifie si il existe déjà une photo correspondante sur le serveur
-        if (req.file !== undefined) {
+    // Si une image a été selectionnée ( ou même reselectionnée !)
+    // Recherche le formulaire correspondant à l'utilisateur
+    Sauce.findOne({ _id: req.params.id })
+      .then((sauce) => {
 
-          // Si il existe déjà une photo sur le serveur 
-          // => compare avec celle contenue dans l'Url du formulaire
-          const filename = sauce.imageUrl.split('/images/')[1];
-          if (req.file.filename != filename) {
+        //Définit le nom du fichier correspondant, avec son Url avant MAJ
+        const filename = sauce.imageUrl.split('/images/')[1];
 
-            // Si la photo sur le serveur est différente de celle contenue dans l'Url du formulaire
-            // Efface l'ancienne photo située sur le serveur
-            fs.unlink(`images/${filename}`, () => {
-            })
-          };
-        };
-      }
-      Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
-        .catch(error => res.status(401).json({ error }));
-    })
-    .catch((error) => {
-      res.status(400).json({ error });
-    });
-}
+        // Et l'efface pour ne pas laisser de fichier image inutile sur le serveur
+        // ('Multer' à déjà sélectionné et enregistré sur le serveur, 
+        // un autre nom fichier image correspondant avec un nom unique ... )
+        fs.unlink(`images/${filename}`, () => {
+        })
+      });
+  }
 
+  // Met à jour le formulaire
+  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
+    .catch(error => res.status(401).json({ error }))
+
+};
 exports.likedNoLiked = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {

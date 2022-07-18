@@ -6,9 +6,8 @@ const dataSauce = require('../midleware/dataSauce')
 
 const router = express.Router();
 
-router.post('/', auth, multer,dataSauce.manufacturer, sauceCtrl.createSauce);
-router.put('/:id', auth, multer, dataSauce.manufacturer,sauceCtrl.modifySauce);
-
+router.post('/', auth, dataSauce.manufacturer, multer, sauceCtrl.createSauce);
+router.put('/:id', auth, dataSauce.manufacturer, multer, sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);

@@ -11,6 +11,8 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 password: hash
             });
+
+            // Sauvegarde l'email de l'utilisateur avec le mot de passe crypté
             user.save()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
                 .catch(error => res.status(401).json({ error }));
@@ -20,17 +22,21 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
+
+        // Verifie si l'email de l'utilisateur n'existe pas déjà
         .then(user => {
             if (!user) {
                 return res.status(404).json({ error: 'Utilisateur non trouvé !' });
             }
 
-            // Cryptage du 
+            // Décryptage du mot de passe pour authentification
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
+                    // Si mot le passe authentifié => Définit un token utilisateur à partir de la variable d'environnement 
+                    // et limite sa validité à 24h
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(

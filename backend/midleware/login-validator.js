@@ -4,7 +4,7 @@ const validatorData = require('validator')
 //Création du shéma de saisie de l'email
 const emailSchema = new passwordValidator()
 
-    //Définition du Shémas de validation 
+    //Utilisation du plugin pour que le format de l'email soit respecté
     .usingPlugin(validatorData.isEmail);
 
 //Module de validation de l'email
