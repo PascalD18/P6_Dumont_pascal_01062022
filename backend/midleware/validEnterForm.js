@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
 
     // 2) Vérification de la saisie de 'manufacturer'
     let validEnter = new RegExp(/^[a-z-A-Z]+$/);// N'accepte que les lettres
-    messErr=`Ne saisir que des lettres pour le champs 'manufacturer'. `
+    messErr = `Ne saisir que des lettres pour le champs 'manufacturer'. `
     if (validEnter.test(manufacturer)) {
 
         //Si saisie correcte => Continue de traiter la création ou la modifictation de la sauce
