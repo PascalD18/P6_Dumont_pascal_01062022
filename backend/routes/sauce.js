@@ -7,7 +7,7 @@ const validEnterForm = require('../midleware/validEnterForm')
 const router = express.Router();
 
 router.post('/', auth,multer,validEnterForm,sauceCtrl.createSauce);
-router.put('/:id', auth, multer,validEnterForm,sauceCtrl.modifySauce);
+router.put('/:id', auth,validEnterForm, multer,sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);

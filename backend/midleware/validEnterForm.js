@@ -21,6 +21,7 @@ module.exports = (req, res, next) => {
 
     // 2) Vérification de la saisie de 'manufacturer'
     let validEnter = new RegExp(/^[a-z-A-Z]+$/);// N'accepte que les lettres
+    messErr=`Ne saisir que des lettres pour le champs 'manufacturer'. `
     if (validEnter.test(manufacturer)) {
 
         //Si saisie correcte => Continue de traiter la création ou la modifictation de la sauce
@@ -32,11 +33,9 @@ module.exports = (req, res, next) => {
         fs.unlink(`images/${filename}`, () => { })
 
         //puis, réponse de l'erreur
-        return res.status(400).json({ message: `Ne saisir que des lettres pour le champs 'manufacturer'. ` });
-
+        return res.status(400).json({ message: `${messErr}` });
     } else {
-
         //En mode modification avec saisie correcte => Reponse de l'erreur
-        return res.status(400).json({ message: `Ne saisir que des lettres pour le champs 'manufacturer'. ` });
+        return res.status(400).json({ message: `${messErr}` });
     }
 };
