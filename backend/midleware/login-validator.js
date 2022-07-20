@@ -8,7 +8,7 @@ const emailSchema = new passwordValidator()
     .usingPlugin(validatorData.isEmail);
 
 //Module de validation de l'email
-module.exports.email = (req, res, next) => {
+exports.email = (req, res, next) => {
     if (emailSchema.validate(req.body.email)) {
         next();
     } else {
@@ -31,7 +31,7 @@ passwordSchema
     .has(/[!-#._$£^]/) // Caracteres spéciaux à inclure dans le mot de passe
 
 // Module de validation du mot de passe
-module.exports.password = (req, res, next) => {
+exports.password = (req, res, next) => {
     if (passwordSchema.validate(req.body.password)) {
         next();
     } else {

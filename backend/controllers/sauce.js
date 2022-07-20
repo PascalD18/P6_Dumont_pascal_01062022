@@ -1,12 +1,11 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
+
 // Ajoute un objet Sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
-
-
   delete sauceObject._userId;
 
   // Création du formulaire de la sauce dans l'objet 'sauce'
@@ -35,10 +34,11 @@ exports.modifySauce = (req, res, next) => {
 
       // Sinon, renseigne le formulaire sauf 'imageUrl'
     } : { ...req.body }
+
   if (req.file !== undefined) {
 
     // Si une image a été selectionnée ( ou même reselectionnée !)
-    // Recherche le formulaire correspondant à l'utilisateur
+    // Efface l'ancien fichier correspondant à l'image avant MAJ
     Sauce.findOne({ _id: req.params.id })
       .then((sauce) => {
 

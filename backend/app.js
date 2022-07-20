@@ -5,11 +5,10 @@ const path = require('path');
 require('dotenv').config();
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-
 const app = express();
 app.use(express.json());
 app.use(helmet({
-  crossOrigineResourcePolicy: false,
+crossOrigineResourcePolicy: false,
 }));
 
 // Configuration de l'entete de la requete
@@ -33,7 +32,7 @@ mongoose.connect('mongodb+srv://Dpascal18-2:Mdpmondodbdpascal18-22022@cluster0.t
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Définition des accés racine pour les routes Sauces et utilisateurs
-app.use('/api/sauces', saucesRoutes);
+app.use('/api/sauces',saucesRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
