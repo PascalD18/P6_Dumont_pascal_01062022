@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
         //puis, réponse de l'erreur
         return res.status(400).json({ message: `${messErr}` });
     } else {
-        
+
         //En mode modification avec saisie correcte => Reponse de l'erreur
         return res.status(400).json({ message: `${messErr}` });
     }
