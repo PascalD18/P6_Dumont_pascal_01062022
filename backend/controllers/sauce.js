@@ -35,56 +35,65 @@ exports.modifySauce = (req, res, next) => {
       // Sinon, renseigne le formulaire sauf 'imageUrl'
     } : { ...req.body }
 
-  if (req.file !== undefined) {
 
-    // Si une image a été selectionnée ( ou même reselectionnée !)
-    // Efface l'ancien fichier correspondant à l'image avant MAJ
-    Sauce.findOne({ _id: req.params.id })
-      .then((sauce) => {
+  //Vérifie si l'utilisateur corresponds à la requéte
+  if (req.body.userId != req.auth.userId) {
+    res.status(401).json({ message: 'Not authorized' });
+  } else {
 
-        //Définit le nom du fichier correspondant, avec son Url avant MAJ
-        const filename = sauce.imageUrl.split('/images/')[1];
+    // Si oui, et si une image a été selectionnée ( ou même reselectionnée !)
+    if (req.file !== undefined) {
+      // Efface l'ancien fichier correspondant à l'image avant MAJ
+      Sauce.findOne({ _id: req.params.id })
+        .then((sauce) => {
 
-        // Et l'efface pour ne pas laisser de fichier image inutile sur le serveur
-        // ('Multer' à déjà sélectionné et enregistré sur le serveur, 
-        // un autre nom fichier image correspondant avec un nom unique ... )
-        fs.unlink(`images/${filename}`, () => {
-        })
-      });
+          //Définit le nom du fichier correspondant, avec son Url avant MAJ
+          const filename = sauce.imageUrl.split('/images/')[1];
+
+          // Et l'efface pour ne pas laisser de fichier image inutile sur le serveur
+          // ('Multer' à déjà sélectionné et enregistré sur le serveur, 
+          // un autre nom fichier image correspondant avec un nom unique ... )
+          fs.unlink(`images/${filename}`, () => {
+          })
+
+        });
+    }
+
+    // Met à jour le formulaire
+    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
+      .catch(error => res.status(401).json({ error }))
   }
-
-  // Met à jour le formulaire
-  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
-    .catch(error => res.status(401).json({ error }))
 
 };
 exports.likedNoLiked = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
-      if (req.body.like == 1) {
+      if (req.body.like == 1 && !sauce.usersLiked.includes(req.auth.userId)) {
 
-        // Si like = 1 => Incrémente likes et ajoute l'utilisateur dans tableau 'usersLiked'
-        Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
+        // Si l'utilisateur authentifié n'est pas contenu dans tableau 'usersLiked'
+        // Et si like = 1 => Incrémente likes et ajoute l'utilisateur dans tableau 'usersLiked'
+        Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.auth.userId } })
           .then(() => res.status(200).json({ message: "Incremente likes et ajoute un utilisateur qui aime !" }))
           .catch(error => res.status(400).json({ error }))
-      } else if (req.body.like == -1) {
+      } else if (req.body.like == -1 && !sauce.usersDisliked.includes(req.auth.userId)) {
 
-        // Si Like = -1 => Incrémente dislikes et ajoute l'utilisateur dans tableau 'usersDisliked'
-        Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId } })
+        // Si l'utilisateur authentifié n'est pas contenu dans tableau 'usersDisliked'
+        // Et si Like = -1 => Incrémente dislikes et ajoute l'utilisateur dans tableau 'usersDisliked'
+        Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: 1 }, $push: { usersDisliked: req.auth.userId } })
           .then(() => { res.status(200).json({ message: "Ajoute un utilisateur qui n' aime pas !" }) })
           .catch(error => res.status(400).json({ error }))
       } else {
-        if (sauce.usersLiked.includes(req.body.userId)) {
+        if (sauce.usersLiked.includes(req.auth.userId)) {
 
           // Si like = 0, et que l'utilisateur est dans le tableau 'usersLiked'
-          Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
+          Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.auth.userId } })
             .then(() => { res.status(200).json({ message: "Décrément likes et enléve un utilisateur qui aime !" }) })
             .catch(error => res.status(400).json({ error }))
         } else {
 
           // Sinon, si like = 0, cela signifie que l'utilisateur est dans le tableau 'usersDisliked'
-          Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } })
+          Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.auth.userId } })
             .then(() => { res.status(200).json({ message: "Décrémente Dislikes et enléve un utilisateur qui n'aime pas !" }) })
             .catch(error => res.status(400).json({ error }))
         }

@@ -27,7 +27,7 @@ passwordSchema
     .has().uppercase() // Doit contenir au moins 1 lettre majuscule
     .has().lowercase() // Doit contenir au moins 1 lettre minuscule
     .has().digits(2) // Doit contenir au moins 1 chiffre
-    .has(/[!-]/) // Doit contenir au moins ! ou - 
+    .has(/[!$]/) // Doit contenir au moins ! ou - 
 
 // Module de validation du mot de passe
 exports.password = (req, res, next) => {
@@ -40,7 +40,7 @@ exports.password = (req, res, next) => {
            - 1 Majuscule au minimum
            - 1 minuscule au minimum
            - Doit contenir au moins un des caracteres suivants :
-             ! -`
+             ! $`
         });
     }
 };

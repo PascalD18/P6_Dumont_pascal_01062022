@@ -14,11 +14,12 @@ const storage = multer.diskStorage({
 
   // Définition de l'extension en fonction de l'image selectionnée
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');
+    const name1 = file.originalname.split(' ').join('_');
     const extension = MIME_TYPES[file.mimetype];
+    name2 = name1.replace('.' + extension, '_');
 
     // Telechargement de l'image en lui attribuant un nom unique
-    callback(null, name + Date.now() + '.' + extension);
+    callback(null, name2 + Date.now() + '.' + extension);
   }
 });
 

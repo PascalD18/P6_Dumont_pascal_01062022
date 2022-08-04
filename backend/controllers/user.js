@@ -23,6 +23,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
 
+    
         // Verifie si l'email de l'utilisateur n'existe pas déjà
         .then(user => {
             if (!user) {
